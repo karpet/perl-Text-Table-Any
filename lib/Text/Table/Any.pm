@@ -18,14 +18,14 @@ sub _encode {
 sub table {
     my %params = @_;
 
-    my $rows       = $params{rows} or die "Must provide rows!";
-    my $backend    = $params{backend} || 'Text::Table::Tiny';
-    my $header_row = $params{header_row} // 1;
+    my $rows       = delete($params{rows}) or die "Must provide rows!";
+    my $backend    = delete($params{backend}) || 'Text::Table::Tiny';
+    my $header_row = delete($params{header_row}) // 1;
 
     if ($backend eq 'Text::Table::Tiny') {
         require Text::Table::Tiny;
         return Text::Table::Tiny::table(
-            rows => $rows, header_row => $header_row) . "\n";
+            rows => $rows, header_row => $header_row, %params) . "\n";
     } elsif ($backend eq 'Text::Table::TinyColor') {
         require Text::Table::TinyColor;
         return Text::Table::TinyColor::table(
@@ -61,7 +61,7 @@ sub table {
     } elsif ($backend eq 'Text::Table::HTML') {
         require Text::Table::HTML;
         return Text::Table::HTML::table(
-            rows => $rows, header_row => $header_row);
+            rows => $rows, header_row => $header_row, %params);
     } elsif ($backend eq 'Text::Table::HTML::DataTables') {
         require Text::Table::HTML::DataTables;
         return Text::Table::HTML::DataTables::table(
